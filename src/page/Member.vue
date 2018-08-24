@@ -187,28 +187,35 @@
         return
 
       this.formLoading = true
-
-      //调用http协议
-      this.$axios.post('/api/member/save', this.form).then(res => {
-        this.formLoading = false
-        if (!res.data.success) {
+      this.$confirm('确认提交吗？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        //调用http协议
+        this.$axios.post('/api/member/save', this.form).then(res => {
+          this.formLoading = false
+          if (!res.data.success) {
+            this.$message({
+              showClose: true,
+              message: res.data.message,
+              type: 'error'
+            });
+            return
+          }
           this.$message({
-            showClose: true,
-            message: res.data.message,
-            type: 'error'
-          });
-          return
-        }
-        this.$message({
-          type: 'success',
-          message: '保存成功!'
-        })
+            type: 'success',
+            message: '保存成功!'
+          })
 
-        //重新载入数据
-        this.page = 1
-        this.getRows()
-        this.formVisible = false
-      }).catch(e => this.formLoading = false)
+          //重新载入数据
+          this.page = 1
+          this.getRows()
+          this.formVisible = false
+        }).catch(e => this.formLoading = false)
+      }).catch(() => {
+        this.formLoading = false
+      })
     })
   }
 
