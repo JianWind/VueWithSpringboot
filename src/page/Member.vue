@@ -2,71 +2,66 @@
   <section>
     <!--工具条-->
     <el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
-      <el-form :inline="true" :model="filters">
+      <el-form :inline="true" :model="formData">
         <el-form-item>
-          <el-input v-model="filters.query" placeholder="姓名/手机号等条件" />
+          <el-input v-model="formData.query" placeholder="姓名/手机号等条件" />
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" v-on:click="handleQuery" icon="el-icon-search">查询</el-button>
+          <el-button type="primary" @click="getListData()" icon="el-icon-search">查询</el-button>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" v-on:click="handleAdd" icon="el-icon-plus">添加</el-button>
+          <el-button type="primary" @click="handleAddEdit()" icon="el-icon-plus">添加</el-button>
         </el-form-item>
       </el-form>
     </el-col>
     <!-- 列表开始 -->
-    <el-table :data="rows" style="width: 100%;" :height="clientHeight" stripe border highlight-current-row v-loading="pageLoading">
-      <el-table-column label="姓名" width="180" :show-overflow-tooltip="true">
-        <template slot-scope="scope">
-            <p>{{ scope.row.userName }}</p>
-        </template>
+    <el-table :data="queryResult" style="width: 100%;" stripe border highlight-current-row v-loading="listLoading">
+      <el-table-column label="姓名" prop="userName" :show-overflow-tooltip="true">
       </el-table-column>
-      <el-table-column label="密码" width="100" align="center" :show-overflow-tooltip="true">
-        <template slot-scope="scope">
-          <p>{{scope.row.passWord}}</p>
-        </template>
+      <el-table-column label="密码" prop="passWord" align="center" :show-overflow-tooltip="true">
       </el-table-column>
-      <el-table-column label="年龄" width="180">
-        <template slot-scope="scope">
-          <i class="el-icon-time"></i>
-          <span style="margin-left: 10px">{{ scope.row.age}}</span>
-        </template>
+      <el-table-column label="年龄" prop="age" >
       </el-table-column>
-      <el-table-column label="操作">
+      <el-table-column label="邮箱" prop="email">
+       </el-table-column>
+      <el-table-column label="加入时间" prop="regTime">
+      </el-table-column>
+      <el-table-column label="小名" prop="nickName">
+      </el-table-column>
+      <el-table-column label="操作" width="300px">
         <template slot-scope="scope">
           <el-button
             size="mini"
             type="primary"
-            @click="handleEdit(scope.$index, scope.row)"><i class="el-icon-edit"></i>编辑</el-button>
-          <el-button
-            size="mini"
-            type="danger"
-            @click="handleDelete(scope.$index, scope.row)"><i class="el-icon-delete"></i>删除</el-button>
+            @click="handleAddEdit(scope.$index, scope.row)"><i class="el-icon-edit"></i>编辑</el-button>
         </template>
       </el-table-column>
     </el-table>
     <!--底部-->
     <el-col :span="24" class="toolbar">
-      <el-pagination layout="prev, pager, next" @current-change="handleCurrentChange" :page-size="20" :total="total" style="float:right;">
+      <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="pagination.pageNum" :page-sizes="pagination.pageSizes" :page-size="pagination.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="pagination.total">
       </el-pagination>
     </el-col>
 
     <!--对话框-->
-    <el-dialog :title="form && form.id ? '编辑' : '新增' " :visible.sync="formVisible" :close-on-click-modal="false">
-      <el-form :model="form" label-width="100px" :rules="rules" ref="form">
+    <el-dialog :title="addEditTitle" :visible.sync="addEditFormVisible" :close-on-click-modal="true" :before-close="addEditFormOnClose">
+      <el-form :model="formData" label-width="100px" :rules="rules" ref="form">
         <el-form-item label="姓名" prop="userName">
-          <el-input v-model="form.userName" />
+          <el-input v-model="formData.userName" />
         </el-form-item>
         <el-form-item label="年龄" prop="age">
-          <el-input v-model="form.age" />
+          <el-input v-model="formData.age" />
         </el-form-item>
         <el-form-item label="密码" prop="passWord">
-          <el-input v-model="form.passWord" />
+        <el-input v-model="formData.passWord" />
+      </el-form-item>
+        <el-form-item label="邮箱" prop="email">
+          <el-input v-model="formData.email" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click.native="formVisible = false">取消</el-button>
-        <el-button type="primary" @click.native="handleSubmit" :loading="formLoading">提交</el-button>
+        <el-button @click.native="addEditFormOnClose">取消</el-button>
+        <el-button type="primary" @click.native="addEditSubmit" :loading="addEditSubmitLoading">提交</el-button>
       </div>
     </el-dialog>
 
@@ -74,189 +69,192 @@
 </template>
 
 <script>
-  const rules = {
-    name: [{
-      required: true,
-      message: '请输入姓名',
-      trigger: 'blur'
-    }],
-    sex: [{
-      required: true,
-      message: '请选择性别',
-      trigger: 'change'
-    }]
-  }
-
-  let data = () => {
-    return {
-      //页码
-      page: 1,
-      //每页数量
-      size: 20,
-      //总数
-      total: 0,
-      //查询条件
-      filters: {},
-      //页面数据
-      rows: [],
-      //页面载入状态
-      pageLoading: false,
-      //列表高度
-      clientHeight: '100%',
-      //表单数据
-      form: {},
-      //验证规则
-      rules: rules,
-      //对话框隐藏状态
-      formVisible: false,
-      //表单提交状态
-      formLoading: false
-    }
-  }
-
-  let handleAdd = function() {
-    this.form = {}
-    this.form.sex = 1
-    this.formVisible = true
-  }
-
-  let handleEdit = function(index, row) {
-    this.form = Object.assign({}, row)
-    this.formVisible = true
-  }
-
-  let handleDelete = function(index, row) {
-    if (this.pageLoading)
-      return
-
-    this.$confirm('此操作将永久删除该数据, 是否继续?', '提示', {
-      confirmButtonText: '确定',
-      cancelButtonText: '取消',
-      type: 'warning'
-    }).then(() => {
-      this.pageLoading = true
-      this.$axios.get('/api/member/remove/' + row.id).then(res => {
-        this.pageLoading = false
-        if (!res.data.success) {
-          this.$message({
-            type: 'error',
-            message: res.data.message
-          })
-          return
-        }
-        this.$message({
-          type: 'success',
-          message: '删除成功!'
-        })
-        this.page = 1
-        this.getRows()
-      }).catch(e => this.pageLoading = false)
-    }).catch(e => {})
-  }
-
-  let getRows = function() {
-    if (this.pageLoading)
-      return
-    this.pageLoading = true
-
-    let params = {
-      page: this.page,
-      size: this.size,
-      query: this.filters.query
-    }
-    //调用post请求
-    this.$axios.post('/api/member/loadPage', params).then(res => {
-      this.pageLoading = false
-      debugger
-      if (!res.data || !res.data.rows)
-        return
-      //总数赋值
-      this.total = res.data.total
-      this.page++;
-      //页面元素赋值
-      this.rows = res.data.rows
-    }).catch(e => this.pageLoading = false)
-  }
-
-  let handleSubmit = function() {
-    if (this.formLoading)
-      return
-
-    this.$refs.form.validate(valid => {
-      if (!valid)
-        return
-
-      this.formLoading = true
-      this.$confirm('确认提交吗？', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        //调用http协议
-        this.$axios.post('/api/member/save', this.form).then(res => {
-          this.formLoading = false
-          if (!res.data.success) {
-            this.$message({
-              showClose: true,
-              message: res.data.message,
-              type: 'error'
-            });
-            return
-          }
-          this.$message({
-            type: 'success',
-            message: '保存成功!'
-          })
-
-          //重新载入数据
-          this.page = 1
-          this.getRows()
-          this.formVisible = false
-        }).catch(e => this.formLoading = false)
-      }).catch(() => {
-        this.formLoading = false
-      })
-    })
-  }
-
-  let handleQuery = function() {
-    this.page = 1
-    this.getRows()
-  }
-
-  let handleCurrentChange = function(val) {
-    this.page = val
-    this.getRows()
-  }
-
-  let initHeight = function() {
-    this.clientHeight = (document.documentElement.clientHeight - 258) + 'px'
-  }
-
-  export default {
-    data: data,
-    methods: {
-      //查询
-      handleQuery,
-      //添加
-      handleAdd,
-      //修改
-      handleEdit,
-      //删除
-      handleDelete,
-      //页数改变
-      handleCurrentChange,
-      //获取分页
-      getRows,
-      //初始化高度
-      initHeight,
-      //提交数据
-      handleSubmit
+  export default {data () {
+      return {
+        rules: {
+          fUserName: [
+            {required: true, message: '姓名不能为空'}
+          ],
+          fUserMobile: [
+            {required: true, message: '电话不能为空'}
+          ],
+          fUserSex: [
+            {required: true, message: '性别不能为空'}
+          ],
+          fValidaStatus: [
+            {required: true, message: '状态不能为空'}
+          ],
+          fUserAccount: [
+            {required: true, message: '账号不能为空'}
+          ],
+          fUserPwd: [
+            {required: true, message: '密码不能为空'}
+          ]
+        },
+        API: {
+          prefix: `/api/member`,
+          getUserPages: `/getUserPages`, // get分页列表
+          save: `/save`, // 新增资源
+        },
+        addEditFormLoading: false, //
+        listLoading: false, // 载入tableData
+        addEditSubmitLoading: false, // 按钮点击后
+        resetPwd: false, // 重置密码界面是否显示
+        addEditFormVisible: false, // 新增界面是否显示
+        dialogFormVisible: false, // 角色分配界面是否显示
+        currentFormDataIndex: -1, // 新增：-1，编辑：>-1
+        // fIsBuyState: false, // 新增，修改Boolean
+        formData: {}, // 提交
+        pagination: { // 分页
+          pageNum: 1,
+          pageSizes: [10, 20, 30, 50],
+          pageSize: 10,
+          total: 1
+        },
+        queryData: { // 查询
+          pageNum: Number,
+          pageSize: Number
+        },
+        queryResult: [
+          // { // 查询返回结果
+          // resCode: '001',
+          // validStat: '启用',
+          // resCateg: '系统资源',
+          // fResName: '定义系统资源',
+          // fResBuy: '否',
+          // price: '1.0'
+          // }
+        ]
+      }
     },
-    mounted: function() {
-      window.addEventListener('resize', this.initHeight)
-      this.initHeight()
-      this.getRows()
+    computed: {
+      addEditTitle () {
+        return this.currentFormDataIndex > -1 ? '编辑' : '新增'
+      }
+    },
+    methods: {
+      formatAPI (_obj = {}) {
+        for (let k of Object.keys(this.API)) {
+          _obj[k] = `${this.API.prefix + this.API[k]}`
+        }
+        return _obj
+      },
+      // pageSize
+      handleSizeChange (num) {
+        this.pagination.pageSize = this.queryData.pageSize = num
+        this.getListData()
+      },
+      // 当前page
+      handleCurrentChange (num) {
+        this.pagination.pageNum = this.queryData.pageNum = num
+        this.getListData()
+      },
+      // 查询
+      getListData () {
+        this.listLoading = true
+        this.queryData.pageNum = this.pagination.pageNum
+        this.queryData.pageSize = this.pagination.pageSize
+        debugger
+        this.$axios.post(this.API.getUserPages, this.queryData).then(response => {
+          this.queryResult = response.data.data
+          this.pagination.total = parseInt(response.data.data.total)
+          this.listLoading = false
+        }).catch((response) => {
+          console.error(response)
+          this.listLoading = false
+          this.$message.error('操作失败')
+        })
+      },
+
+      // 显示新增编辑界面
+      handleAddEdit ($index = 'empty') {
+        let _index = $index === 'empty' ? 0 : $index
+        let _data = this.queryResult[_index]
+
+        if ($index === 'empty') {
+          this.currentFormDataIndex = -1
+          this.formData = {
+            fId: '',
+            fUserName: '',
+            fUserMobile: '',
+            fUserWechat: '',
+            fUserQq: '',
+            fUserSex: '',
+            fUserAccount: '',
+            fUserPwd: '',
+            fRemark: '',
+            fValidaStatus: ''
+          }
+        } else {
+          this.currentFormDataIndex = _index
+          this.formData = _data
+        }
+        _data.fUserPwd = this.fUserPwd
+        this.addEditFormVisible = true
+      },
+
+      // 新增
+      addEditSubmit () {
+        this.$refs.formData.validate((valid) => {
+          if (!valid) return
+          this.$confirm('确认提交吗？', '提示', {}).then(() => {
+            this.addEditSubmitLoading = true
+            // NProgress.start()
+            let _url = this.currentFormDataIndex > -1 ? this.API.updateTNlmSysUser : this.API.insertTNlmSysUser
+            let _data = this.formData
+            let param = {
+              fId: _data.fId,
+              fUserName: _data.fUserName,
+              fUserMobile: _data.fUserMobile,
+              fUserWechat: _data.fUserWechat,
+              fUserQq: _data.fUserQq,
+              fUserSex: _data.fUserSex,
+              fUserAccount: _data.fUserAccount,
+              fUserPwd: _data.fUserPwd,
+              fRemark: _data.fRemark,
+              fValidaStatus: _data.fValidaStatus
+            }
+            this.$axios.post(_url, param).then((response) => {
+              let result = response.data.data
+              if (result > 0) {
+                this.addEditSubmitLoading = false
+                this.addEditFormOnClose()
+                this.$message({ message: '操作成功', type: 'success', duration: 1500 })
+                if (this.currentFormDataIndex > -1) {
+                  Object.assign(this.queryResult[this.currentFormDataIndex], this.formData)
+                } else {
+                  this.getListData()
+                }
+              } else {
+                this.addEditSubmitLoading = false
+                this.$message.error('操作失败')
+              }
+            }).catch((response) => {
+              this.addEditSubmitLoading = false
+              console.error(response)
+              this.$message.error('操作失败')
+            })
+          })
+        })
+      },
+      // 关闭新增编辑弹窗
+      addEditFormOnClose () {
+        this.addEditFormVisible = false
+      },
+      // 关闭新增编辑弹窗
+      handleCloseReset () {
+        this.resetPwd = false
+      },
+      handleCloseRole () {
+        this.dialogFormVisible = false
+      },
+      init () {
+        this.API = this.formatAPI()
+        this.getListData()
+      }
+    },
+    mounted () {
+      this.init()
     }
   }
 </script>
