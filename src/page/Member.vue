@@ -14,27 +14,22 @@
         </el-form-item>
       </el-form>
     </el-col>
-    <el-table :data="rows" style="width: 100%;overflow: auto;" :height="clientHeight" stripe border highlight-current-row v-loading="pageLoading">
-      <el-table-column label="注册日期" width="180">
-        <template slot-scope="scope">
-          <i class="el-icon-time"></i>
-          <span style="margin-left: 10px">{{ scope.row.date }}</span>
-        </template>
-      </el-table-column>
+    <!-- 列表开始 -->
+    <el-table :data="rows" style="width: 100%;" :height="clientHeight" stripe border highlight-current-row v-loading="pageLoading">
       <el-table-column label="姓名" width="180" :show-overflow-tooltip="true">
         <template slot-scope="scope">
-          <el-popover trigger="hover" placement="top">
-            <p>姓名: {{ scope.row.name }}</p>
-            <p>住址: {{ scope.row.address }}</p>
-            <div slot="reference" class="name-wrapper">
-              <el-tag size="medium">{{ scope.row.name }}</el-tag>
-            </div>
-          </el-popover>
+            <p>{{ scope.row.userName }}</p>
         </template>
       </el-table-column>
-      <el-table-column prop="sex" label="性别" width="100" align="center" :show-overflow-tooltip="true">
+      <el-table-column label="密码" width="100" align="center" :show-overflow-tooltip="true">
         <template slot-scope="scope">
-          {{scope.row.sex===1?'男':'女'}}
+          <p>{{scope.row.passWord}}</p>
+        </template>
+      </el-table-column>
+      <el-table-column label="年龄" width="180">
+        <template slot-scope="scope">
+          <i class="el-icon-time"></i>
+          <span style="margin-left: 10px">{{ scope.row.age}}</span>
         </template>
       </el-table-column>
       <el-table-column label="操作">
@@ -59,17 +54,14 @@
     <!--对话框-->
     <el-dialog :title="form && form.id ? '编辑' : '新增' " :visible.sync="formVisible" :close-on-click-modal="false">
       <el-form :model="form" label-width="100px" :rules="rules" ref="form">
-        <el-form-item label="姓名" prop="name">
-          <el-input v-model="form.name" />
+        <el-form-item label="姓名" prop="userName">
+          <el-input v-model="form.userName" />
         </el-form-item>
         <el-form-item label="年龄" prop="age">
           <el-input v-model="form.age" />
         </el-form-item>
-        <el-form-item label="性别" prop="sex">
-          <el-radio-group v-model="form.sex">
-            <el-radio :label="1">男</el-radio>
-            <el-radio :label="2">女</el-radio>
-          </el-radio-group>
+        <el-form-item label="密码" prop="passWord">
+          <el-input v-model="form.passWord" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -175,6 +167,7 @@
     //调用post请求
     this.$axios.post('/api/member/loadPage', params).then(res => {
       this.pageLoading = false
+      debugger
       if (!res.data || !res.data.rows)
         return
       //总数赋值
