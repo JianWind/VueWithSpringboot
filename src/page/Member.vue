@@ -154,8 +154,8 @@
         this.listLoading = true
         this.queryData.pageNum = this.pagination.pageNum
         this.queryData.pageSize = this.pagination.pageSize
-        debugger
-        this.$http.post(this.API.getUserPages, this.queryData).then(response => {
+        this.$http.get(this.API.getUserPages, {params:this.queryData}).then(response => {
+          debugger
           this.queryResult = response.data.data
           this.pagination.total = parseInt(response.data.data.total)
           this.listLoading = false
