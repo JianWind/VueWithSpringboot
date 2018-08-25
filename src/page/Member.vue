@@ -155,7 +155,7 @@
         this.queryData.pageNum = this.pagination.pageNum
         this.queryData.pageSize = this.pagination.pageSize
         debugger
-        this.$axios.post(this.API.getUserPages, this.queryData).then(response => {
+        this.$http.post(this.API.getUserPages, this.queryData).then(response => {
           this.queryResult = response.data.data
           this.pagination.total = parseInt(response.data.data.total)
           this.listLoading = false

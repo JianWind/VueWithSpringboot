@@ -4,10 +4,12 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 
+import VueResource from 'vue-resource'
 import 'es6-promise/auto'
 import 'element-ui/lib/theme-chalk/index.css'
 import 'font-awesome/css/font-awesome.min.css'
 
+Vue.use(VueResource);
 import ElementUI from 'element-ui'
 import './assets/theme/element-#1C6132/index.css'
 Vue.use(ElementUI)
