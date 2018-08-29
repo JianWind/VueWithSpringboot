@@ -58,8 +58,8 @@
         <el-form-item label="账户" prop="jUserAccount">
           <el-input v-model="formData.jUserAccount" />
         </el-form-item>
-        <el-form-item v-if="currentFormDataIndex == -1" label="密码" prop="passWord">
-          <el-input v-model="formData.passWord" />
+        <el-form-item v-if="currentFormDataIndex == -1" label="密码" prop="jUserPwd">
+          <el-input v-model="formData.jUserPwd" />
         </el-form-item>
         <span v-else></span>
         <el-form-item label="年龄" prop="jUserAge">
@@ -150,7 +150,7 @@ export default {
       API: {
         prefix: `/UserController`,
         getUserPages: `/getUserPages`, // get分页列表
-        save: `/save` // 新增资源
+        insertJSysUser: `/insertJSysUser` // 新增资源
       },
       addEditFormLoading: false, //
       listLoading: false, // 载入tableData
@@ -251,26 +251,26 @@ export default {
 
     // 新增
     addEditSubmit () {
-      this.$refs.formData.validate((valid) => {
+      this.$refs.form.validate((valid) => {
         if (!valid) return
         this.$confirm('确认提交吗？', '提示', {}).then(() => {
           this.addEditSubmitLoading = true
           // NProgress.start()
-          let _url = this.currentFormDataIndex > -1 ? this.API.updateTNlmSysUser : this.API.insertTNlmSysUser
+          let _url = this.currentFormDataIndex > -1 ? this.API.updateTNlmSysUser : this.API.insertJSysUser
           let _data = this.formData
           let param = {
-            fId: _data.fId,
-            fUserName: _data.fUserName,
-            fUserMobile: _data.fUserMobile,
-            fUserWechat: _data.fUserWechat,
-            fUserQq: _data.fUserQq,
-            fUserSex: _data.fUserSex,
-            fUserAccount: _data.fUserAccount,
-            fUserPwd: _data.fUserPwd,
-            fRemark: _data.fRemark,
-            fValidaStatus: _data.fValidaStatus
+            jId: _data.jId,
+            jUserName: _data.jUserName,
+            jUserMobile: _data.jUserMobile,
+            jUserWechat: _data.jUserWechat,
+            jUserGender: _data.jUserGender,
+            jUserEmail: _data.jUserEmail,
+            jUserAccount: _data.jUserAccount,
+            jUserPwd: _data.jUserPwd,
+            jUserAge: _data.jUserAge,
+            jValidaStatus: _data.jValidaStatus
           }
-          this.$axios.post(_url, param).then((response) => {
+          this.$http.post(_url, param).then((response) => {
             let result = response.data.data
             if (result > 0) {
               this.addEditSubmitLoading = false
