@@ -1,21 +1,18 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-
-
-Vue.use(Router)
-
 import Main from '@/page/Main'
 import Dashboard from '@/page/Dashboard'
 import Member from '@/page/Member'
+Vue.use(Router)
 
 let routes = [{
-  path:'/',
-  component:Main,
-  hidden:true,
-  children:[{
+  path: '/',
+  component: Main,
+  hidden: true,
+  children: [{
     path: '/',
     component: Dashboard,
-    name:'首页'
+    name: '首页'
   }]
 }]
 
@@ -32,7 +29,7 @@ routes.push({
 })
 
 const router = new Router({
-  routes:routes
+  routes: routes
 })
 
 export default router

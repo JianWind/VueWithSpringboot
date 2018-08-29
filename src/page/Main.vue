@@ -52,8 +52,8 @@
 let data = () => {
   return {
     collapsed: false,
-    systemName: '后台管理',
-    userName: '系统管理员',
+    systemName: 'Jane',
+    userName: 'Jane',
     menus: []
   }
 }

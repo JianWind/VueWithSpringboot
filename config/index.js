@@ -11,11 +11,11 @@ module.exports = {
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
     proxyTable: {
-      '/api': {
+      '/springboot-mybatis': {
         target: 'http://localhost:8080/',
         changeOrigin: true,
         pathRewrite: {
-          '^/api': ''
+          '^/springboot-mybatis': ''
         }
       }
     },
