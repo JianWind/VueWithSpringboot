@@ -93,8 +93,8 @@
         },
         API: {
           prefix: `/api/member`,
-          getUserPages: `/getUserPages`, // get分页列表
-          save: `/save`, // 新增资源
+          getUserPages:`/getUserPages`, // get分页列表
+          save:`/save`, // 新增资源
         },
         addEditFormLoading: false, //
         listLoading: false, // 载入tableData

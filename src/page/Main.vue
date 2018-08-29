@@ -49,45 +49,48 @@
 </template>
 
 <script>
-  let data = () => {
-    return {
-      collapsed: false,
-      systemName: '后台管理',
-      userName: '系统管理员',
-      menus: []
-    }
+let data = () => {
+  return {
+    collapsed: false,
+    systemName: '后台管理',
+    userName: '系统管理员',
+    menus: []
   }
+}
 
-  let initMenu = function() {
-    for (let i in this.$router.options.routes) {
-      let root = this.$router.options.routes[i]
-      if (root.hidden)
+let initMenu = function () {
+  for (let i in this.$router.options.routes) {
+    let root = this.$router.options.routes[i]
+    if (root.hidden) {
+      continue
+    }
+    let children = []
+    for (let j in root.children) {
+      let item = root.children[j]
+      if (item.hidden) {
         continue
-      let children = []
-      for (let j in root.children) {
-        let item = root.children[j]
-        if (item.hidden)
-          continue
-        children.push(item)
       }
-
-      if (children.length < 1)
-        continue
-
-      this.menus.push(root)
-      root.children = children
+      children.push(item)
     }
-  }
 
-  export default {
-    data: data,
-    methods: {
-      initMenu
-    },
-    mounted: function() {
-      this.initMenu()
+    if (children.length < 1) {
+      continue
     }
+
+    this.menus.push(root)
+    root.children = children
   }
+}
+
+export default {
+  data: data,
+  methods: {
+    initMenu
+  },
+  mounted: function () {
+    this.initMenu()
+  }
+}
 </script>
 
 <style scoped="scoped"
@@ -157,4 +160,3 @@
     }
   }
 </style>
-
