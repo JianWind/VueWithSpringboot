@@ -20,8 +20,6 @@
       </el-table-column>
       <el-table-column label="账户" prop="jUserAccount" align="center" >
       </el-table-column>
-      <el-table-column label="密码" prop="jUserPwd" align="center" >
-      </el-table-column>
       <el-table-column label="年龄" prop="jUserAge" >
       </el-table-column>
       <el-table-column label="性别" prop="jUserGender" >
@@ -150,7 +148,8 @@ export default {
       API: {
         prefix: `/UserController`,
         getUserPages: `/getUserPages`, // get分页列表
-        insertJSysUser: `/insertJSysUser` // 新增资源
+        insertJSysUser: `/insertJSysUser`, // 新增资源
+        updateJSysUser: `/updateJSysUser` // 新增资源
       },
       addEditFormLoading: false, //
       listLoading: false, // 载入tableData

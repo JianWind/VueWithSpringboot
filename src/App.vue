@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <img src="./assets/favicon.png">
+    <!--<img src="./assets/favicon.png">-->
     <transition name="fade" mode="out-in">
       <router-view></router-view>
     </transition>

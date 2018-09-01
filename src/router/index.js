@@ -1,11 +1,14 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Main from '@/page/Main'
-import Dashboard from '@/page/Dashboard'
-import Member from '@/page/Member'
+import Main from '@/page/admin/Main'
+import Dashboard from '@/page/admin/Dashboard'
+import JSysUser from '@/page/JSysUser/JSysUser'
+import user from './user'
 Vue.use(Router)
 
-let routes = [{
+let routes = [
+  ...user,
+  {
   path: '/',
   component: Main,
   hidden: true,
@@ -17,14 +20,18 @@ let routes = [{
 }]
 
 routes.push({
-  path: '/member',
-  name: '会员管理',
+  path: '/admin',
+  name: '系统管理',
   component: Main,
   iconCls: 'fa fa-user-circle-o',
   children: [{
-    path: '/member/data',
-    component: Member,
-    name: '会员信息管理'
+    path: '/admin/jSysUser',
+    component: JSysUser,
+    name: '用户信息管理'
+  }, {
+    path: '/admin/SysDict',
+    component: JSysUser,
+    name: '数据字典管理'
   }]
 })
 

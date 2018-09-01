@@ -21,11 +21,6 @@ Vue.use(ElementUI)
 
 Vue.config.productionTip = false
 
-// 开发模式开启mock.js
-if (process.env.NODE_ENV === 'development') {
-  // require('./mock')
-}
-
 Vue.prototype.$axios = axios
 
 /* eslint-disable no-new */

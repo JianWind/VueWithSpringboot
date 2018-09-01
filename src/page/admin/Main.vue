@@ -2,7 +2,7 @@
   <section>
     <el-container class="container">
       <!--左边-->
-      <el-aside :width="collapsed? '65px' : '200px' ">
+      <el-aside :width="collapsed? '64px' : '200px' ">
         <el-container>
           <el-header>
           <span class="menu-button" v-if="collapsed" @click.prevent="collapsed=!collapsed">
@@ -11,10 +11,10 @@
             <span v-else class="system-name">{{systemName}}</span>
           </el-header>
           <el-main>
-            <el-menu :default-active="$route.path" :collapse="collapsed">
+            <el-menu :default-active="$route.path" :collapse="collapsed" background-color="#043742" text-color="#fff" active-text-color="#ffd04b">
               <template v-for="(item,index) in menus">
                 <el-submenu :index="index+''" v-if="!item.leaf">
-                  <template slot="title"><i :class="item.iconCls"></i><span v-if="!collapsed">{{item.name}}</span></template>
+                  <template slot="title"><i :class="item.iconCls"></i><span v-if="!collapsed">&nbsp;{{item.name}}</span></template>
                   <el-menu-item v-for="child in item.children" :index="child.path" :key="child.path" @click="$router.push(child.path)">{{child.name}}</el-menu-item>
                 </el-submenu>
                 <el-menu-item v-if="item.leaf&&item.children.length>0" :index="item.children[0].path"><i :class="item.iconCls"></i>{{item.children[0].name}}</el-menu-item>
@@ -97,7 +97,7 @@ export default {
        lang="scss">
   $width: 100%;
   $height: 100%;
-  $background-color: #0b0a3e;
+  $background-color: #51A4B4;
   $header-color: #fff;
   $header-height: 60px;
 
@@ -110,7 +110,7 @@ export default {
       .el-header {
         line-height: $header-height;
         background-color: $background-color;
-        color: $header-color;
+        color: #fff;
         text-align: center;
       }
       .el-container {
@@ -141,7 +141,7 @@ export default {
 
     .header {
       background-color: $background-color;
-      color: $header-color;
+      color: #fff;
       text-align: center;
       line-height: $header-height;
       padding: 0;
