@@ -14,9 +14,9 @@
 </template>
 
 <script>
-    export default {
-        name: "login"
-    }
+export default {
+  name: 'login'
+}
 </script>
 
 <style scoped>

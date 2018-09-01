@@ -7,17 +7,18 @@ import user from './user'
 Vue.use(Router)
 
 let routes = [
+  { path: '/', redirect: '/login' },
   ...user,
   {
-  path: '/',
-  component: Main,
-  hidden: true,
-  children: [{
     path: '/',
-    component: Dashboard,
-    name: '首页'
+    component: Main,
+    hidden: true,
+    children: [{
+      path: '/',
+      component: Dashboard,
+      name: '首页'
+    }]
   }]
-}]
 
 routes.push({
   path: '/admin',
