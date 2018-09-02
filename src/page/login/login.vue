@@ -9,13 +9,67 @@
     <el-input placeholder="请输入内容" v-model="password" class="fix_width" clearable >
     </el-input>
     <div style="margin: 20px 0;"></div>
-    <el-button type="success" size="medium" class="fix_width">Sign in</el-button>
+    <el-button type="success" size="medium" class="fix_width" @click="login">Sign in</el-button>
   </el-card>
 </template>
 
 <script>
+import cacheData from '@/assets/js/common/cacheData'
 export default {
-  name: 'login'
+  name: 'login',
+  create () {
+    sessionStorage.clear()
+  },
+  methods: {
+    handleTabNavClick (item, index) {
+      this.activeIndex = index
+    },
+    // 请求数据
+    doLogin () {
+      this.$refs.form.validate((valid) => {
+        if (!valid) return
+        this.isRequesting = true
+        this.$http.post(this.API.doLogin, this.form).then(response => {
+          this.isRequesting = false
+          if (!response.data.success) return
+          this.loginSuccess(response.data)
+        }).catch(_ => {
+          this.isRequesting = false
+        })
+      })
+    },
+    // 登录成功
+    loginSuccess (data) {
+      let routes = cacheData(data.data)
+      console.log(routes)
+      this.$router.addRoutes(routes)
+      sessionStorage.removeItem('default-active')
+      this.$router.push({name: 'main'})
+    }
+  },
+  data () {
+    return {
+      API: {
+        doLogin: 'nlm-web/userController/login',
+        getUser: '/userController/getUser' // 查登录用户信息
+      },
+      form: {
+        account: 'admin',
+        password: '123456'
+      },
+      rules: {
+        account: [
+          { required: true, message: '请输入account地址', trigger: 'blur' }
+        ],
+        password: [
+          { required: true, message: '请密码', trigger: 'blur' },
+          { required: true, message: '请密码', trigger: 'change' }
+        ]
+      },
+      routesArr: [],
+      isRequesting: false
+    }
+  }
 }
 </script>
 
@@ -27,7 +81,7 @@ export default {
     left:50%;
     top:50%;
     margin-left:-180px;
-    margin-top:-100px;
+    margin-top:-250px;
   }
   .fix_width {
     width: 260px;
