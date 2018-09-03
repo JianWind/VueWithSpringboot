@@ -38,6 +38,7 @@ export default {
         if (!valid) return
         this.isRequesting = true
         this.$http.post(this.API.doLogin, this.form).then(response => {
+          debugger
           this.isRequesting = false
           if (!response.data.success) return
           this.loginSuccess(response.data)
@@ -59,8 +60,8 @@ export default {
   data () {
     return {
       API: {
-        doLogin: 'springboot-mybatis/loginController/login',
-        getUser: '/userController/getUser' // 查登录用户信息
+        doLogin: '/LoginController/login',
+        getUser: '/getUser' // 查登录用户信息
       },
       form: {
         account: 'admin',
