@@ -2,7 +2,7 @@
   <section>
     <el-container class="container">
       <!--左边-->
-      <el-aside :width="collapsed? '64px' : '200px' ">
+      <el-aside :width="collapsed? '66px' : '200px' ">
         <el-container>
           <el-header>
           <span class="menu-button" v-if="collapsed" @click.prevent="collapsed=!collapsed">
@@ -11,7 +11,7 @@
             <span v-else class="system-name">{{systemName}}</span>
           </el-header>
           <el-main>
-            <el-menu :default-active="$route.path" :collapse="collapsed" background-color="#043742" text-color="#fff" active-text-color="#ffd04b">
+            <el-menu :default-active="$route.path" :collapse="collapsed" background-color="#545c64" text-color="#fff" active-text-color="#ffd04b">
               <template v-for="(item,index) in menus">
                 <el-submenu :index="index+''" v-if="!item.leaf">
                   <template slot="title"><i :class="item.iconCls"></i><span v-if="!collapsed">&nbsp;{{item.name}}</span></template>
@@ -97,7 +97,7 @@ export default {
        lang="scss">
   $width: 100%;
   $height: 100%;
-  $background-color: #51A4B4;
+  $background-color: #545c64;
   $header-color: #fff;
   $header-height: 60px;
 

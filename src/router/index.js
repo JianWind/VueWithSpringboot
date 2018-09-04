@@ -76,7 +76,7 @@ router.afterEach((to, from, next) => {
   if (to.meta.title) {
     routerTitle = to.meta.title
   } else {
-    routerTitle = '新生活'
+    routerTitle = 'Jane管理后台'
   }
   document.title = routerTitle
 })
