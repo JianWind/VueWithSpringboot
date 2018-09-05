@@ -11,7 +11,7 @@ const isBuild = process.env.NODE_ENV === 'production'
 let userInfo = sessionStorage.getItem('user')
 let resourceData = sessionStorage.getItem('resourceData')
 let routes = [
-  { path: '/', redirect: '/login' },
+  // { path: '/', redirect: '/login' },
   ...user,
   {
     path: '/',
@@ -37,11 +37,11 @@ routes.push({
   component: Main,
   iconCls: 'fa fa-user-circle-o',
   children: [{
-    path: '/admin/jSysUser',
+    path: 'jSysUser',
     component: JSysUser,
     name: '用户信息管理'
   }, {
-    path: '/admin/SysDict',
+    path: 'SysDict',
     component: JSysUser,
     name: '数据字典管理'
   }]

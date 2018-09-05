@@ -5,15 +5,18 @@ import App from './App'
 import router from './router'
 import ElementUI from 'element-ui'
 import './assets/theme/element-#1C6132/index.css'
+import components from './components'
 // import VueResource from 'vue-resource'
 import 'es6-promise/auto'
 import 'element-ui/lib/theme-chalk/index.css'
 import 'font-awesome/css/font-awesome.min.css'
 import axios from './assets/plugin/AjaxPlugin'
+import store from './store'
 
 // Vue.use(VueResource)
 Vue.use(axios)
 Vue.use(ElementUI)
+Vue.use(components)
 
 // Vue.prototype.$utils = Utils;
 // Vue.prototype.$api = Api;
@@ -21,11 +24,12 @@ Vue.use(ElementUI)
 
 Vue.config.productionTip = false
 
-Vue.prototype.$axios = axios
+// Vue.prototype.$axios = axios
 
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
+  store,
   router,
   components: { App },
   template: '<App/>'
