@@ -1,5 +1,5 @@
 const isBuild = process.env.NODE_ENV === 'production'
-const domain = isBuild ? `http://localhost:8080` : ''
+const domain = isBuild ? `http://39.107.75.199:8080` : ''
 const path = '/springboot-mybatis'
 export default {
   isLoading: false, // 加载状态

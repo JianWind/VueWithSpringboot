@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import Main from '@/page/admin/Main'
 import Dashboard from '@/page/admin/Dashboard'
 import JSysUser from '@/page/JSysUser/JSysUser'
+import index from '@/page/index/index'
 import user from './user'
 import cacheData from '@/assets/plugin/cacheData'
 Vue.use(Router)
@@ -44,6 +45,10 @@ routes.push({
     path: 'SysDict',
     component: JSysUser,
     name: '数据字典管理'
+  },{
+    path: 'index',
+    component: index,
+    name: '菜单管理'
   }]
 })
 
