@@ -4,11 +4,25 @@
       <!--左边-->
       <el-aside :width="collapsed? '66px' : '200px' ">
         <el-container>
-          <el-header>
-          <span class="menu-button" v-if="collapsed" @click.prevent="collapsed=!collapsed">
-            <i class="fa fa-align-justify"></i>
-          </span>
-            <span v-else class="system-name">{{systemName}}</span>
+          <el-header style="height:38px;">
+            <el-row >
+              <el-col :span="24"  >
+                <div class="layout lay_a" @click="collapsed=!collapsed" >
+                  <el-aside class="trans-left-menu head" :width="collapsed?'64px':'198px'">
+                    <i style="color:fff!important" class="el-icon-menu" />
+                    <span class="logo-text" v-show="collapsed?false:true">后台管理系统</span>
+                  </el-aside>
+                </div>
+                <!--<div class="layout" style="vertical-align: unset;padding-left: 1rem;">
+                  <el-breadcrumb separator-class="el-icon-arrow-right" style="padding-bottom: 0.7rem;">
+                    <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
+                    <el-breadcrumb-item>活动管理</el-breadcrumb-item>
+                    <el-breadcrumb-item>活动列表</el-breadcrumb-item>
+                    <el-breadcrumb-item>活动详情</el-breadcrumb-item>
+                  </el-breadcrumb>
+                </div>-->
+              </el-col>
+            </el-row>
           </el-header>
           <el-main>
             <el-menu :default-active="$route.path" :collapse="collapsed" background-color="#545c64" text-color="#fff" active-text-color="#ffd04b">
@@ -49,44 +63,44 @@
 </template>
 
 <script>
-  let data = () => {
-    return {
-      collapsed: false,
-      systemName: 'Jane',
-      userName: 'Jane',
-      menus: []
-    }
+let data = () => {
+  return {
+    collapsed: false,
+    systemName: 'Jane',
+    userName: 'Jane',
+    menus: []
   }
-  let initMenu = function () {
-    for (let i in this.$router.options.routes) {
-      let root = this.$router.options.routes[i]
-      if (root.hidden) {
+}
+let initMenu = function () {
+  for (let i in this.$router.options.routes) {
+    let root = this.$router.options.routes[i]
+    if (root.hidden) {
+      continue
+    }
+    let children = []
+    for (let j in root.children) {
+      let item = root.children[j]
+      if (item.hidden) {
         continue
       }
-      let children = []
-      for (let j in root.children) {
-        let item = root.children[j]
-        if (item.hidden) {
-          continue
-        }
-        children.push(item)
-      }
-      if (children.length < 1) {
-        continue
-      }
-      this.menus.push(root)
-      root.children = children
+      children.push(item)
     }
-  }
-  export default {
-    data: data,
-    methods: {
-      initMenu
-    },
-    mounted: function () {
-      this.initMenu()
+    if (children.length < 1) {
+      continue
     }
+    this.menus.push(root)
+    root.children = children
   }
+}
+export default {
+  data: data,
+  methods: {
+    initMenu
+  },
+  mounted: function () {
+    this.initMenu()
+  }
+}
 </script>
 
 <style scoped="scoped"

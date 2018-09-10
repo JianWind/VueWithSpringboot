@@ -3,20 +3,20 @@ import Router from 'vue-router'
 import Main from '@/page/admin/Main'
 import Dashboard from '@/page/admin/Dashboard'
 import JSysUser from '@/page/JSysUser/JSysUser'
-import index from '@/page/index/index'
 import user from './user'
 import cacheData from '@/assets/plugin/cacheData'
+import Layout from '@/page/layout/Layout'
 Vue.use(Router)
 const isBuild = process.env.NODE_ENV === 'production'
 
 let userInfo = sessionStorage.getItem('user')
 let resourceData = sessionStorage.getItem('resourceData')
 let routes = [
-  // { path: '/', redirect: '/login' },
+  { path: '/', redirect: '/login' },
   ...user,
   {
     path: '/',
-    component: Main,
+    component: Layout,
     hidden: true,
     children: [{
       path: '/',
@@ -45,10 +45,6 @@ routes.push({
     path: 'SysDict',
     component: JSysUser,
     name: '数据字典管理'
-  },{
-    path: 'index',
-    component: index,
-    name: '菜单管理'
   }]
 })
 
